@@ -11,7 +11,6 @@ exports.default = (0, config_plugins_1.createRunOncePlugin)((config, props = {})
         props.launchModeExperimental;
     const devClientLaunchLastBundleIos = iOSLaunchMode === 'most-recent';
     const devClientLaunchLocalBundleIos = iOSLaunchMode === 'local';
-    // TODO: apply changes in iOS
     config = (0, config_plugins_1.withInfoPlist)(config, (config) => {
         config.modResults['DEV_CLIENT_TRY_TO_LAUNCH_LAST_BUNDLE'] = devClientLaunchLastBundleIos;
         config.modResults['DEV_CLIENT_TRY_TO_LAUNCH_LOCAL_BUNDLE'] = devClientLaunchLocalBundleIos;

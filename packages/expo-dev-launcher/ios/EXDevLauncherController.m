@@ -285,6 +285,14 @@
   }
 
   NSNumber *devClientTryToLaunchLastBundleValue = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"DEV_CLIENT_TRY_TO_LAUNCH_LAST_BUNDLE"];
+  NSNumber *devClientTryToLaunchLocalBundleValue = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"DEV_CLIENT_TRY_TO_LAUNCH_LOCAL_BUNDLE"];
+  
+  BOOL shouldTryToLaunchLocalBundle = (devClientTryToLaunchLocalBundleValue != nil) ? [devClientTryToLaunchLocalBundleValue boolValue] : NO;
+  if (shouldTryToLaunchLocalBundle) {
+    [self loadApp:@"http://localhost:8081" withProjectUrl:nil withTimeout:10.0 onSuccess:nil onError:navigateToLauncher];
+    return;
+  }
+
   BOOL shouldTryToLaunchLastOpenedBundle = (devClientTryToLaunchLastBundleValue != nil) ? [devClientTryToLaunchLastBundleValue boolValue] : YES;
   if (_lastOpenedAppUrl != nil && shouldTryToLaunchLastOpenedBundle) {
     // When launch to the last opened url, the previous url could be unreachable because of LAN IP changed.
@@ -293,6 +301,8 @@
     [self loadApp:_lastOpenedAppUrl withProjectUrl:nil withTimeout:requestTimeout onSuccess:nil onError:navigateToLauncher];
     return;
   }
+
+
   [self navigateToLauncher];
 }
 

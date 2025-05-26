@@ -22,7 +22,6 @@ export default createRunOncePlugin<PluginConfigType>(
     const devClientLaunchLastBundleIos = iOSLaunchMode === 'most-recent';
     const devClientLaunchLocalBundleIos = iOSLaunchMode === 'local';
 
-    // TODO: apply changes in iOS
     config = withInfoPlist(config, (config) => {
       config.modResults['DEV_CLIENT_TRY_TO_LAUNCH_LAST_BUNDLE'] = devClientLaunchLastBundleIos;
       config.modResults['DEV_CLIENT_TRY_TO_LAUNCH_LOCAL_BUNDLE'] = devClientLaunchLocalBundleIos;
