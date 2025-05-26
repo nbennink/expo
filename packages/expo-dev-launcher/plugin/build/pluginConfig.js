@@ -10,12 +10,12 @@ const schema = {
     properties: {
         launchMode: {
             type: 'string',
-            enum: ['most-recent', 'launcher'],
+            enum: ['most-recent', 'launcher', 'local'],
             nullable: true,
         },
         launchModeExperimental: {
             type: 'string',
-            enum: ['most-recent', 'launcher'],
+            enum: ['most-recent', 'launcher', 'local'],
             nullable: true,
         },
         android: {
@@ -23,12 +23,12 @@ const schema = {
             properties: {
                 launchMode: {
                     type: 'string',
-                    enum: ['most-recent', 'launcher'],
+                    enum: ['most-recent', 'launcher', 'local'],
                     nullable: true,
                 },
                 launchModeExperimental: {
                     type: 'string',
-                    enum: ['most-recent', 'launcher'],
+                    enum: ['most-recent', 'launcher', 'local'],
                     nullable: true,
                 },
             },
@@ -39,12 +39,12 @@ const schema = {
             properties: {
                 launchMode: {
                     type: 'string',
-                    enum: ['most-recent', 'launcher'],
+                    enum: ['most-recent', 'launcher', 'local'],
                     nullable: true,
                 },
                 launchModeExperimental: {
                     type: 'string',
-                    enum: ['most-recent', 'launcher'],
+                    enum: ['most-recent', 'launcher', 'local'],
                     nullable: true,
                 },
             },

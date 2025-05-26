@@ -10,10 +10,11 @@ import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.ReactApplication
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.ReactContext
-import expo.interfaces.devmenu.ReactHostWrapper
 import expo.modules.devlauncher.helpers.DevLauncherInstallationIDHelper
 import expo.modules.devlauncher.helpers.DevLauncherMetadataHelper
 import expo.modules.devlauncher.helpers.DevLauncherUrl
+import expo.interfaces.devmenu.ReactHostWrapper
+import expo.modules.core.utilities.EmulatorUtilities
 import expo.modules.devlauncher.helpers.getFieldInClassHierarchy
 import expo.modules.devlauncher.helpers.hasUrlQueryParam
 import expo.modules.devlauncher.helpers.isDevLauncherUrl
@@ -256,28 +257,47 @@ class DevLauncherController private constructor() :
         return true
       }
 
-    intent?.let {
-      // If the app is already open or the intent is not a main intent, we don't want to handle it.
-      if (mode == Mode.APP || intent.action != Intent.ACTION_MAIN) {
-        return@let
-      }
-
-      val shouldTryToLaunchLastOpenedBundle = getMetadataValue(context, "DEV_CLIENT_TRY_TO_LAUNCH_LAST_BUNDLE", "true").toBoolean()
-      val lastOpenedApp = recentlyOpedAppsRegistry.getMostRecentApp()
-      if (shouldTryToLaunchLastOpenedBundle && lastOpenedApp != null) {
-        coroutineScope.launch {
-          try {
-            loadApp(Uri.parse(lastOpenedApp.url), activityToBeInvalidated)
-          } catch (e: Throwable) {
-            navigateToLauncher()
-          }
+      intent?.let {
+        // If the app is already open or the intent is not a main intent, we don't want to handle it.
+        if (mode == Mode.APP || intent.action != Intent.ACTION_MAIN) {
+            return@let
         }
-        return true
-      }
-      return handleExternalIntent(it)
-    }
 
-    return false
+        val shouldTryToLaunchLastOpenedBundle = getMetadataValue(context, "DEV_CLIENT_TRY_TO_LAUNCH_LAST_BUNDLE", "true").toBoolean()
+        val shouldTryToLaunchLocalBundle = getMetadataValue(context, "DEV_CLIENT_TRY_TO_LAUNCH_LOCAL_BUNDLE", "true").toBoolean()
+
+        if (shouldTryToLaunchLastOpenedBundle) {
+            val lastOpenedApp = recentlyOpedAppsRegistry.getMostRecentApp()
+
+            if (lastOpenedApp != null) {
+                coroutineScope.launch {
+                    try {
+                        loadApp(Uri.parse(lastOpenedApp.url), activityToBeInvalidated)
+                    } catch (e: Throwable) {
+                        navigateToLauncher()
+                    }
+                }
+
+                return true
+            }
+        } else if (shouldAutoConnectToLocal) {
+            var isDevice = !EmulatorUtilities.isRunningOnEmulator();
+
+            coroutineScope.launch {
+                try {
+                    loadApp(Uri.parse(if (isDevice) "https://localhost:8081" else "http://10.0.2.2:8081"), activityToBeInvalidated)
+                } catch (e: Throwable) {
+                    navigateToLauncher()
+                }
+            }
+
+            return true
+        }
+
+        return handleExternalIntent(it)
+      }
+
+      return false
   }
 
   private fun handleExternalIntent(intent: Intent): Boolean {

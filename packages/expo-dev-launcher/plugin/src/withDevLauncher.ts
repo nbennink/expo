@@ -18,30 +18,43 @@ export default createRunOncePlugin<PluginConfigType>(
       props.launchMode ??
       props.ios?.launchModeExperimental ??
       props.launchModeExperimental;
-    if (iOSLaunchMode === 'launcher') {
-      config = withInfoPlist(config, (config) => {
-        config.modResults['DEV_CLIENT_TRY_TO_LAUNCH_LAST_BUNDLE'] = false;
-        return config;
-      });
-    }
+
+    const devClientLaunchLastBundleIos = iOSLaunchMode === 'most-recent';
+    const devClientLaunchLocalBundleIos = iOSLaunchMode === 'local';
+
+    // TODO: apply changes in iOS
+    config = withInfoPlist(config, (config) => {
+      config.modResults['DEV_CLIENT_TRY_TO_LAUNCH_LAST_BUNDLE'] = devClientLaunchLastBundleIos;
+      config.modResults['DEV_CLIENT_TRY_TO_LAUNCH_LOCAL_BUNDLE'] = devClientLaunchLocalBundleIos;
+
+      return config;
+    });
 
     const androidLaunchMode =
       props.android?.launchMode ??
       props.launchMode ??
       props.android?.launchModeExperimental ??
       props.launchModeExperimental;
-    if (androidLaunchMode === 'launcher') {
-      config = withAndroidManifest(config, (config) => {
-        const mainApplication = AndroidConfig.Manifest.getMainApplicationOrThrow(config.modResults);
 
-        AndroidConfig.Manifest.addMetaDataItemToMainApplication(
-          mainApplication,
-          'DEV_CLIENT_TRY_TO_LAUNCH_LAST_BUNDLE',
-          false?.toString()
-        );
-        return config;
-      });
-    }
+    const devClientLaunchLastBundleAndroid = androidLaunchMode === 'most-recent';
+    const devClientLaunchLocalBundleAndroid = androidLaunchMode === 'local';
+
+    config = withAndroidManifest(config, (config) => {
+      const mainApplication = AndroidConfig.Manifest.getMainApplicationOrThrow(config.modResults);
+
+      AndroidConfig.Manifest.addMetaDataItemToMainApplication(
+        mainApplication,
+        'DEV_CLIENT_TRY_TO_LAUNCH_LAST_BUNDLE',
+        devClientLaunchLastBundleAndroid.toString()
+      );
+
+      AndroidConfig.Manifest.addMetaDataItemToMainApplication(
+        mainApplication,
+        'DEV_CLIENT_TRY_TO_LAUNCH_LOCAL_BUNDLE',
+        devClientLaunchLocalBundleAndroid.toString()
+      );
+      return config;
+    });
 
     return config;
   },

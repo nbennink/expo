@@ -35,11 +35,11 @@ export type PluginConfigOptions = {
    *
    * @default 'most-recent'
    */
-  launchMode?: 'most-recent' | 'launcher';
+  launchMode?: 'most-recent' | 'launcher' | 'local';
   /**
    * @deprecated use the `launchMode` property instead
    */
-  launchModeExperimental?: 'most-recent' | 'launcher';
+  launchModeExperimental?: 'most-recent' | 'launcher' | 'local';
 };
 
 const schema: JSONSchemaType<PluginConfigType> = {
@@ -47,12 +47,12 @@ const schema: JSONSchemaType<PluginConfigType> = {
   properties: {
     launchMode: {
       type: 'string',
-      enum: ['most-recent', 'launcher'],
+      enum: ['most-recent', 'launcher', 'local'],
       nullable: true,
     },
     launchModeExperimental: {
       type: 'string',
-      enum: ['most-recent', 'launcher'],
+      enum: ['most-recent', 'launcher', 'local'],
       nullable: true,
     },
     android: {
@@ -60,12 +60,12 @@ const schema: JSONSchemaType<PluginConfigType> = {
       properties: {
         launchMode: {
           type: 'string',
-          enum: ['most-recent', 'launcher'],
+          enum: ['most-recent', 'launcher', 'local'],
           nullable: true,
         },
         launchModeExperimental: {
           type: 'string',
-          enum: ['most-recent', 'launcher'],
+          enum: ['most-recent', 'launcher', 'local'],
           nullable: true,
         },
       },
@@ -76,12 +76,12 @@ const schema: JSONSchemaType<PluginConfigType> = {
       properties: {
         launchMode: {
           type: 'string',
-          enum: ['most-recent', 'launcher'],
+          enum: ['most-recent', 'launcher', 'local'],
           nullable: true,
         },
         launchModeExperimental: {
           type: 'string',
-          enum: ['most-recent', 'launcher'],
+          enum: ['most-recent', 'launcher', 'local'],
           nullable: true,
         },
       },
